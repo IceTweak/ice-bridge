@@ -8,6 +8,9 @@
     "@truffle/hdwallet-provider": "^2.1.2",
     "@openzeppelin/contracts": "^4.8.0"
   },
+  "scripts": {
+    "getChain": "ganache-cli --db ./ganache_db/"
+  },
   "license": "ISC",
   "private": true,
   "repository": "github:icetweak/solo-bridge"

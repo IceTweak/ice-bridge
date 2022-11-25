@@ -1,14 +1,19 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier: ISC
 
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./Itoken.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "./IToken.sol";
 
-contract BaseBridge {
-    address public owner;
+///@title Basic bridge contract
+contract BaseBridge is Ownable {
     IToken public token;
+
+    /// @dev Allows avoid to process the same transfer twice
     mapping(address => mapping(uint256 => bool)) public processedNonces;
+
+    /// @dev Keeps state of the contracts to execute methods
     enum Step {
         Burn,
         Mint
@@ -19,20 +24,21 @@ contract BaseBridge {
         uint256 amount,
         uint256 date,
         uint256 nonce,
-        bytes signature,
         Step indexed step
     );
 
     constructor(address _token) {
-        owner = msg.sender;
         token = IToken(_token);
     }
 
+    ///@dev Burns tokens that should transfered out
+    ///@param to - address which tokens will burnt
+    ///@param amount - amount of token to burn
+    ///@param nonce - allow to check if transfer is alredy processed
     function burn(
         address to,
         uint256 amount,
-        uint256 nonce,
-        bytes calldata signature
+        uint256 nonce
     ) external {
         require(
             processedNonces[msg.sender][nonce] == false,
@@ -46,79 +52,27 @@ contract BaseBridge {
             amount,
             block.timestamp,
             nonce,
-            signature,
             Step.Burn
         );
     }
 
+    ///@dev Mint tokens that should transfered in
+    ///@param from - tokens spent address
+    ///@param to - address which get the tokens in
+    ///@param amount - amount of token to burn
+    ///@param nonce - allow to check if transfer is alredy processed
     function mint(
         address from,
         address to,
         uint256 amount,
-        uint256 nonce,
-        bytes calldata signature
-    ) external {
-        bytes32 message = prefixed(
-            keccak256(abi.encodePacked(from, to, amount, nonce))
-        );
-        require(recoverSigner(message, signature) == from, "wrong signature");
+        uint256 nonce
+    ) external onlyOwner {
         require(
             processedNonces[from][nonce] == false,
             "transfer already processed"
         );
         processedNonces[from][nonce] = true;
         token.mint(to, amount);
-        emit Transfer(
-            from,
-            to,
-            amount,
-            block.timestamp,
-            nonce,
-            signature,
-            Step.Mint
-        );
-    }
-
-    function prefixed(bytes32 hash) internal pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
-            );
-    }
-
-    function recoverSigner(bytes32 message, bytes memory sig)
-        internal
-        pure
-        returns (address)
-    {
-        uint8 v;
-        bytes32 r;
-        bytes32 s;
-        (v, r, s) = splitSignature(sig);
-        return ecrecover(message, v, r, s);
-    }
-
-    function splitSignature(bytes memory sig)
-        internal
-        pure
-        returns (
-            uint8,
-            bytes32,
-            bytes32
-        )
-    {
-        require(sig.length == 65);
-        bytes32 r;
-        bytes32 s;
-        uint8 v;
-        assembly {
-            // first 32 bytes, after the length prefix
-            r := mload(add(sig, 32))
-            // second 32 bytes
-            s := mload(add(sig, 64))
-            // final byte (first byte of the next 32 bytes)
-            v := byte(0, mload(add(sig, 96)))
-        }
-        return (v, r, s);
+        emit Transfer(from, to, amount, block.timestamp, nonce, Step.Mint);
     }
 }

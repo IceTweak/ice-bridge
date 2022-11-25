@@ -1,36 +1,20 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier: ISC
 
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract BaseToken is ERC20 {
-    address public owner;
+contract BaseToken is ERC20, Ownable {
+    constructor(string memory _name, string memory _symbol)
+        ERC20(_name, _symbol)
+    {}
 
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        require(
-            owner == msg.sender,
-            "OnlyOwner: only the owner can trigger this method!"
-        );
-        _;
-    }
-
-    function updateOwner(address newowner) external onlyOwner {
-        require(msg.sender == owner, "only owner");
-        owner = newowner;
-    }
-
-    function mint(address to, uint256 amount) external {
-        require(msg.sender == owner, "only owner");
+    function mint(address to, uint256 amount) external onlyOwner {
         _mint(to, amount);
     }
 
-    function burn(address owner, uint256 amount) external {
-        require(msg.sender == owner, "only owner");
-        _burn(owner, amount);
+    function burn(address _owner, uint256 amount) external onlyOwner {
+        _burn(_owner, amount);
     }
 }

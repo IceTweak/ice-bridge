@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./Itoken.sol";
 
 contract BaseBridge {
-    address public admin;
+    address public owner;
     IToken public token;
     mapping(address => mapping(uint256 => bool)) public processedNonces;
     enum Step {
@@ -24,7 +24,7 @@ contract BaseBridge {
     );
 
     constructor(address _token) {
-        admin = msg.sender;
+        owner = msg.sender;
         token = IToken(_token);
     }
 

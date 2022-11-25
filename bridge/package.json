@@ -1,7 +1,14 @@
 {
+  "name": "@icetweak/solo-bridge",
+  "bugs": "https://github.com/IceTweak/solo-bridge.git",
+  "version": "1.0.0",
+  "description": "Basic EVM-compatible bridge app",
   "dependencies": {
     "dotenv": "^16.0.3",
     "@truffle/hdwallet-provider": "^2.1.2",
     "@openzeppelin/contracts": "^4.8.0"
-  }
+  },
+  "license": "ISC",
+  "private": true,
+  "repository": "github:icetweak/solo-bridge"
 }

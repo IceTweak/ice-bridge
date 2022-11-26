@@ -9,7 +9,7 @@
     "@openzeppelin/contracts": "^4.8.0"
   },
   "scripts": {
-    "getChain": "ganache-cli --db ./ganache_db/"
+    "getChain": "ganache-cli --db ganache_db/"
   },
   "license": "ISC",
   "private": true,

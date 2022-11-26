@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IToken.sol";
 
 ///@title Basic bridge contract
-contract BaseBridge is Ownable {
+contract BridgeFactory is Ownable {
     IToken public token;
 
     /// @dev Allows avoid to process the same transfer twice

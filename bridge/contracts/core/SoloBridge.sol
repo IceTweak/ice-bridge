@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IToken.sol";
 
 ///@title Basic bridge contract
-contract BridgeFactory is Ownable {
+contract SoloBridge is Ownable {
     IToken public token;
 
     /// @dev Allows avoid to process the same transfer twice
@@ -34,7 +34,7 @@ contract BridgeFactory is Ownable {
     ///@dev Burns tokens that should transfered out
     ///@param to - address which tokens will burnt
     ///@param amount - amount of token to burn
-    ///@param nonce - allow to check if transfer is alredy processed
+    ///@param nonce - allow to check if transfer is already processed
     function burn(
         address to,
         uint256 amount,
@@ -60,7 +60,7 @@ contract BridgeFactory is Ownable {
     ///@param from - tokens spent address
     ///@param to - address which get the tokens in
     ///@param amount - amount of token to burn
-    ///@param nonce - allow to check if transfer is alredy processed
+    ///@param nonce - allow to check if transfer is already processed
     function mint(
         address from,
         address to,

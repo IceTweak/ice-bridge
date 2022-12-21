@@ -2,77 +2,46 @@
 
 pragma solidity ^0.8.17;
 
+import "../libraries/SafeERC20Namer.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./IToken.sol";
+import "./DestToken.sol";
 
-///@title Basic bridge contract
-contract SoloBridge is Ownable {
-    IToken public token;
+error ErrorZeroAddress();
+error ErrorBridgeExists();
 
-    /// @dev Allows avoid to process the same transfer twice
-    mapping(address => mapping(uint256 => bool)) public processedNonces;
+/// @title Basic bridge contract
+contract SoloBridge {
+    event BridgeCreated(address originToken, address destToken, uint256 bridgeCount);
+    mapping(address => address) public getBridge;
+    address[] public allBridges;
 
-    /// @dev Keeps state of the contracts to execute methods
-    enum Step {
-        Burn,
-        Mint
-    }
-    event Transfer(
-        address from,
-        address to,
-        uint256 amount,
-        uint256 date,
-        uint256 nonce,
-        Step indexed step
-    );
+    constructor() {}
 
-    constructor(address _token) {
-        token = IToken(_token);
-    }
+    /// @dev creates new wrapped DestToken instance
+    function createBridge(address _originToken)
+        external
+        returns (address destToken)
+    {
+        if (_originToken == address(0)) {
+            revert ErrorZeroAddress();
+        }
+        if (getBridge[_originToken] != address(0)) {
+            revert ErrorBridgeExists();
+        }
 
-    ///@dev Burns tokens that should transfered out
-    ///@param to - address which tokens will burnt
-    ///@param amount - amount of token to burn
-    ///@param nonce - allow to check if transfer is already processed
-    function burn(
-        address to,
-        uint256 amount,
-        uint256 nonce
-    ) external {
-        require(
-            processedNonces[msg.sender][nonce] == false,
-            "transfer already processed"
+        string memory tokenName = string(
+            abi.encodePacked("w", SafeERC20Namer.tokenName(_originToken))
         );
-        processedNonces[msg.sender][nonce] = true;
-        token.burn(msg.sender, amount);
-        emit Transfer(
-            msg.sender,
-            to,
-            amount,
-            block.timestamp,
-            nonce,
-            Step.Burn
+        string memory tokenSymbol = string(
+            abi.encodePacked("w", SafeERC20Namer.tokenSymbol(_originToken))
         );
-    }
 
-    ///@dev Mint tokens that should transfered in
-    ///@param from - tokens spent address
-    ///@param to - address which get the tokens in
-    ///@param amount - amount of token to burn
-    ///@param nonce - allow to check if transfer is already processed
-    function mint(
-        address from,
-        address to,
-        uint256 amount,
-        uint256 nonce
-    ) external onlyOwner {
-        require(
-            processedNonces[from][nonce] == false,
-            "transfer already processed"
+        destToken = address(
+            new DestToken(address(this), tokenName, tokenSymbol)
         );
-        processedNonces[from][nonce] = true;
-        token.mint(to, amount);
-        emit Transfer(from, to, amount, block.timestamp, nonce, Step.Mint);
+
+        getBridge[_originToken] = destToken;
+        allBridges.push(destToken);
+        emit BridgeCreated(_originToken, destToken, allBridges.length);
     }
 }

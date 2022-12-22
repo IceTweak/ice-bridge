@@ -96,7 +96,14 @@ module.exports = {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*",   // This network is yours, in the cloud.
-    }
+    },
+
+		bsc_testnet: { 
+			provider: () => new HDWalletProvider(MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
+			host: "https://data-seed-prebsc-1-s1.binance.org", 
+			port: 8545,
+			network_id: "97"
+		}
   },
 
   // Set default mocha options here, use special reporters, etc.

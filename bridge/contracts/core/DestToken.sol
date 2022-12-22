@@ -5,6 +5,8 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
+error OnlyBridgeAccess();
+
 /// @title ERC20 implementation created by bridge for transfering
 /// @notice Tokens that recipient recives via using bridge to
 /// destination network
@@ -20,7 +22,9 @@ contract DestToken is ERC20, ERC20Burnable {
     }
 
     modifier onlyBridge() {
-        require(bridge == msg.sender, "Only bridge has allowance");
+        if (bridge != msg.sender){
+            revert OnlyBridgeAccess();
+        }
         _;
     }
 

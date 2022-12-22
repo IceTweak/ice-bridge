@@ -11,7 +11,9 @@
   "scripts": {
     "getChain": "ganache-cli --db ganache_db/",
     "generate-types": "npx typechain --target=truffle-v5 'build/contracts/*.json'",
-    "postinstall": "npx truffle compile && npm run generate-types"
+    "postinstall": "npx truffle compile && npm run generate-types",
+    "test": "truffle test",
+    "compile": "truffle compile"
   },
   "license": "ISC",
   "private": true,

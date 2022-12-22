@@ -41,6 +41,9 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
+require("ts-node").register({
+  files: true,
+});
 require('dotenv').config();
 const { MNEMONIC, INFURA_KEY } = process.env;
 

@@ -1,4 +1,18 @@
+#node
 node_modules/
+
+#enveroinments
 .env
+
+# truffle
 build/
+
+# typechain
+types
+
+# buidler
+artifacts
+cache
+
+#ganacheDB
 bridge/ganache_db/

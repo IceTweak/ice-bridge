@@ -98,15 +98,18 @@ module.exports = {
       provider: () => new HDWalletProvider(MNEMONIC, "http://127.0.0.1:8545/"),
       host: "127.0.0.1",
       port: 8545,
-      network_id: "*",   // This network is yours, in the cloud.
+      network_id: '*', // This network is yours, in the cloud.
+      gas: 3000000,
+      gasPrice: 10000000000,
+      skipDryRun: true,   
     },
 
-		bsc_testnet: { 
-			provider: () => new HDWalletProvider(MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
-			host: "https://data-seed-prebsc-1-s1.binance.org", 
-			port: 8545,
-			network_id: "97"
-		}
+		// bsc_testnet: { 
+		// 	provider: () => new HDWalletProvider(MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
+		// 	host: "https://data-seed-prebsc-1-s1.binance.org", 
+		// 	port: 8545,
+		// 	network_id: "97"
+		// }
   },
 
   // Set default mocha options here, use special reporters, etc.

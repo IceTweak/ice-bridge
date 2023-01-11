@@ -9,7 +9,6 @@
     "dotenv": "^16.0.3"
   },
   "scripts": {
-    "getChain": "ganache-cli --db ganache_db/",
     "generate-types": "npx typechain --target=truffle-v5 'build/contracts/*.json'",
     "postinstall": "npx truffle compile && npm run generate-types",
     "test": "truffle test",
@@ -23,6 +22,7 @@
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.17",
+    "@truffle/hdwallet-provider": "^2.1.4",
     "ganache-cli": "^6.12.2",
     "truffle": "^5.7.1",
     "ts-node": "^10.9.1",

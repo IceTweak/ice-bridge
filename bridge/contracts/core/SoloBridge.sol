@@ -14,8 +14,11 @@ contract SoloBridge {
     event BridgeCreated(address originToken, address destToken, uint256 bridgeCount);
     mapping(address => address) public getBridge;
     address[] public allBridges;
+    address public bridgeWallet;
 
-    constructor() {}
+    constructor(address _bridgeWallet) {
+        bridgeWallet = _bridgeWallet;
+    }
 
     /// @dev creates new wrapped DestToken instance
     function createBridge(address _originToken)

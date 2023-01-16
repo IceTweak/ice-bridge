@@ -45,7 +45,7 @@ require("ts-node").register({
   files: true,
 });
 require('dotenv').config();
-const { MNEMONIC, BSC_MNEMONIC, BSC_API} = process.env;
+const { GANACHE_MNEMONIC, BSC_MNEMONIC, BSC_API } = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
@@ -100,8 +100,8 @@ module.exports = {
     // },
     //
     // Useful for private networks
-    private: {
-      provider: () => new HDWalletProvider(MNEMONIC, "http://127.0.0.1:8545/"),
+    ganache: {
+      provider: () => new HDWalletProvider(GANACHE_MNEMONIC, "http://127.0.0.1:8545/"),
       host: "127.0.0.1",
       port: 8545,
       network_id: '*', // This network is yours, in the cloud.
@@ -118,7 +118,12 @@ module.exports = {
       networkCheckTimeout: 1000000,
       timeoutBlocks: 200,
       skipDryRun: true,
-		}
+		},
+
+    mumbai: {
+      provider: () => new HDWalletProvider(POLYGON_MNEMONIC, "https://"),
+      skipDryRun: true,
+    },
   },
 
   // Set default mocha options here, use special reporters, etc.

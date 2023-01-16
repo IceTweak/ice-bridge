@@ -45,7 +45,7 @@ require("ts-node").register({
   files: true,
 });
 require('dotenv').config();
-const { MNEMONIC, INFURA_KEY } = process.env;
+const { MNEMONIC, BSC_MNEMONIC, BSC_API} = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
@@ -59,6 +59,12 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
+  plugins: ['truffle-plugin-verify'],
+
+  api_keys: {
+    bscscan: BSC_API,
+  },
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -104,12 +110,15 @@ module.exports = {
       skipDryRun: true,   
     },
 
-		// bsc_testnet: { 
-		// 	provider: () => new HDWalletProvider(MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
-		// 	host: "https://data-seed-prebsc-1-s1.binance.org", 
-		// 	port: 8545,
-		// 	network_id: "97"
-		// }
+		bsc_testnet: { 
+			provider: () => new HDWalletProvider(BSC_MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
+			host: "https://data-seed-prebsc-1-s1.binance.org", 
+			port: 8545,
+			network_id: "97",
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+		}
   },
 
   // Set default mocha options here, use special reporters, etc.

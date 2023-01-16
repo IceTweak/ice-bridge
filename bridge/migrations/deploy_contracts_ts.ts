@@ -1,4 +1,4 @@
-type Network = "private";
+type Network = "private" | "bsc_testnet";
 
 module.exports = (artifacts: Truffle.Artifacts, web3: Web3) => {
   return async (
@@ -7,7 +7,7 @@ module.exports = (artifacts: Truffle.Artifacts, web3: Web3) => {
     accounts: string[]
   ) => {
 
-    /**@dev - Deploy to ganache (private) network */
+    /**@dev - Deploy to network(-s) from Network type */
     const TokenFactory = artifacts.require("TokenFactory");
     const SoloBridge = artifacts.require("SoloBridge");
     const DestToken = artifacts.require("DestToken");
@@ -16,4 +16,3 @@ module.exports = (artifacts: Truffle.Artifacts, web3: Web3) => {
     deployer.deploy(SoloBridge);
   };
 };
-/**@dev - Need deploy to BSC testnet */

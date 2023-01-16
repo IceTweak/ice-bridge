@@ -44,6 +44,7 @@
 require("ts-node").register({
   files: true,
 });
+
 require('dotenv').config();
 const { GANACHE_MNEMONIC, BSC_MNEMONIC, BSC_API } = process.env;
 

@@ -23,6 +23,7 @@
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.17",
+    "ethereum-waffle": "^3.4.4",
     "ganache-cli": "^6.12.2",
     "truffle": "^5.7.1",
     "truffle-plugin-verify": "^0.6.1",

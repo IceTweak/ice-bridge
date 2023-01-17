@@ -1,38 +1,41 @@
-import {
-  SoloBridgeInstance,
-  TokenFactoryInstance,
-} from "../types/truffle-contracts";
-import {expect, use} from 'chai';
-import { AddressZero } from "ethers/constants";
+import { expect, use } from "chai";
+import { Contract, ethers } from "ethers";
+import { deployContract, MockProvider, solidity } from "ethereum-waffle";
+import { AddressZero } from "@ethersproject/constants";
+import SoloBridge from "../build/SoloBridge.json";
+import TokenFactory from "../build/TokenFactory.json";
+import DestToken from "../build/DestToken.json";
 
-const SoloBridge = artifacts.require("SoloBridge");
-const TokenFactory = artifacts.require("TokenFactory");
+use(solidity);
 
-contract("SoloBridge", (accounts) => {
-  let soloBridge: SoloBridgeInstance;
-  let token: TokenFactoryInstance;
+describe("SoloBridge", () => {
+  const [sender, wallet, receiver1, receiver2] =
+    new MockProvider().getWallets();
+  let soloBridge: Contract;
+  let token: Contract;
 
   beforeEach(async () => {
-    soloBridge = await SoloBridge.deployed();
-    token = await TokenFactory.deployed();
+    soloBridge = await deployContract(sender, SoloBridge, [wallet.address]);
+    token = await deployContract(sender, TokenFactory, ["OriginToken", "OT"]);
   });
 
-  it("should get instance of contract", async () => {
-    console.log(await soloBridge.bridgeWallet());
+  it("should init the contract", async () => {
+    expect(await soloBridge.bridgeWallet()).to.eq(wallet.address);
   });
 
-  /** @test Need to add chai matchers */
   describe("Bridge creation", () => {
-    xit("should revert with ErrorZeroAddress", async () => {
+    const TEST_VALUE = ethers.utils.parseEther("1");
+
+    it("should revert with ErrorZeroAddress", async () => {
       await expect(soloBridge.createBridge(AddressZero)).to.be.reverted;
     });
 
-    xit("should revert with ErrorBridgeExists", async () => {
+    it("should revert with ErrorBridgeExists", async () => {
       await soloBridge.createBridge(token.address);
       await expect(soloBridge.createBridge(token.address)).to.be.reverted;
     });
 
-    xit("should create bridge from originToken", async () => {
+    it("should create bridge from originToken", async () => {
       await expect(soloBridge.createBridge(token.address)).to.emit(
         soloBridge,
         "BridgeCreated"
@@ -40,6 +43,19 @@ contract("SoloBridge", (accounts) => {
       expect(await soloBridge.allBridges(0)).to.eq(
         await soloBridge.getBridge(token.address)
       );
+    });
+
+    xit("should mint from dest token", async () => {
+      await expect(soloBridge.createBridge(token.address)).to.emit(
+        soloBridge,
+        "BridgeCreated"
+      );
+      const destAddress = await soloBridge.allBridges(0);
+      let destToken = new ethers.Contract(destAddress, DestToken.abi, sender);
+
+      await destToken.connect(wallet).mint(receiver1.address, TEST_VALUE);
+
+      expect(await destToken.balanceOf(receiver1.address)).to.eq(TEST_VALUE);
     });
   });
 });

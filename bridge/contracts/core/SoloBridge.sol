@@ -40,7 +40,7 @@ contract SoloBridge {
         );
 
         destToken = address(
-            new DestToken(address(this), tokenName, tokenSymbol)
+            new DestToken(bridgeWallet, tokenName, tokenSymbol)
         );
 
         getBridge[_originToken] = destToken;

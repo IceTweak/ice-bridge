@@ -41,8 +41,12 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
+require("ts-node").register({
+  files: true,
+});
+
 require('dotenv').config();
-const { MNEMONIC, INFURA_KEY } = process.env;
+const { GANACHE_MNEMONIC, BSC_MNEMONIC, BSC_API } = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
@@ -56,6 +60,12 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
+  plugins: ['truffle-plugin-verify'],
+
+  api_keys: {
+    bscscan: BSC_API,
+  },
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -91,19 +101,30 @@ module.exports = {
     // },
     //
     // Useful for private networks
-    private: {
-      provider: () => new HDWalletProvider(MNEMONIC, "http://127.0.0.1:8545/"),
+    ganache: {
+      provider: () => new HDWalletProvider(GANACHE_MNEMONIC, "http://127.0.0.1:8545/"),
       host: "127.0.0.1",
       port: 8545,
-      network_id: "*",   // This network is yours, in the cloud.
+      network_id: '*', // This network is yours, in the cloud.
+      gas: 3000000,
+      gasPrice: 10000000000,
+      skipDryRun: true,   
     },
 
 		bsc_testnet: { 
-			provider: () => new HDWalletProvider(MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
+			provider: () => new HDWalletProvider(BSC_MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
 			host: "https://data-seed-prebsc-1-s1.binance.org", 
 			port: 8545,
-			network_id: "97"
-		}
+			network_id: "97",
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+		},
+
+    mumbai: {
+      provider: () => new HDWalletProvider(POLYGON_MNEMONIC, "https://"),
+      skipDryRun: true,
+    },
   },
 
   // Set default mocha options here, use special reporters, etc.

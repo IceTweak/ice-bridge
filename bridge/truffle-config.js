@@ -46,7 +46,7 @@ require("ts-node").register({
 });
 
 require('dotenv').config();
-const { GANACHE_MNEMONIC, BSC_MNEMONIC, BSC_API } = process.env;
+const { GANACHE_MNEMONIC, BSC_MNEMONIC, BSC_API, PRIVATE_KEY } = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
@@ -119,10 +119,14 @@ module.exports = {
       networkCheckTimeout: 1000000,
       timeoutBlocks: 200,
       skipDryRun: true,
-		},
+		}, 
 
     mumbai: {
-      provider: () => new HDWalletProvider(POLYGON_MNEMONIC, "https://"),
+      provider: () => new HDWalletProvider(PRIVATE_KEY, "https://matic-mumbai.chainstacklabs.com"),
+      host: "https://matic-mumbai.chainstacklabs.com",
+      network_id: "80001",
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
       skipDryRun: true,
     },
   },

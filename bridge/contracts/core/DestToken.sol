@@ -11,18 +11,18 @@ error OnlyBridgeAccess();
 /// @notice Tokens that recipient recives via using bridge to
 /// destination network
 contract DestToken is ERC20, ERC20Burnable {
-    address bridge;
+    address bridgeWallet;
 
     constructor(
         address _bridge,
         string memory _name,
         string memory _symbol
     ) ERC20(_name, _symbol) {
-        bridge = _bridge;
+        bridgeWallet = _bridge;
     }
 
     modifier onlyBridge() {
-        if (bridge != msg.sender){
+        if (bridgeWallet != msg.sender){
             revert OnlyBridgeAccess();
         }
         _;
@@ -35,7 +35,6 @@ contract DestToken is ERC20, ERC20Burnable {
         onlyBridge
     {
         _mint(_recipient, _amount);
-        // console.log("Tokens minted for %s", _recipient);
     }
 
     /// @dev called from the bridge when tokens are received on destination side
@@ -46,6 +45,5 @@ contract DestToken is ERC20, ERC20Burnable {
         onlyBridge
     {
         super.burnFrom(_account, _amount);
-        // console.log("Tokens burned from %s", _account);
     }
 }

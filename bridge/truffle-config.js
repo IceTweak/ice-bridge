@@ -46,7 +46,7 @@ require("ts-node").register({
 });
 
 require('dotenv').config();
-const { GANACHE_MNEMONIC, BSC_MNEMONIC, BSC_API } = process.env;
+const { GANACHE_MNEMONIC, MNEMONIC, BSC_API, POLYGON_PK, POLYGON_API } = process.env;
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
@@ -65,6 +65,7 @@ module.exports = {
 
   api_keys: {
     bscscan: BSC_API,
+    polygonscan: POLYGON_API,
   },
 
   networks: {
@@ -112,7 +113,7 @@ module.exports = {
     },
 
 		bsc_testnet: { 
-			provider: () => new HDWalletProvider(BSC_MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
+			provider: () => new HDWalletProvider(MNEMONIC, "https://data-seed-prebsc-1-s1.binance.org:8545/"), 
 			host: "https://data-seed-prebsc-1-s1.binance.org", 
 			port: 8545,
 			network_id: "97",
@@ -122,7 +123,11 @@ module.exports = {
 		},
 
     mumbai: {
-      provider: () => new HDWalletProvider(POLYGON_MNEMONIC, "https://"),
+      provider: () => new HDWalletProvider(POLYGON_PK, "https://matic-mumbai.chainstacklabs.com"),
+      host: "https://matic-mumbai.chainstacklabs.com",
+      network_id: "80001",
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
       skipDryRun: true,
     },
   },

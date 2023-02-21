@@ -11,8 +11,11 @@ error ErrorBridgeExists();
 
 /// @title Basic bridge contract
 contract SoloBridge {
+    
     event BridgeCreated(address originToken, address destToken, uint256 bridgeCount);
+
     mapping(address => address) public getBridge;
+
     address[] public allBridges;
     address public bridgeWallet;
 
@@ -46,5 +49,10 @@ contract SoloBridge {
         getBridge[_originToken] = destToken;
         allBridges.push(destToken);
         emit BridgeCreated(_originToken, destToken, allBridges.length);
+    }
+
+    /// @dev transfer tokens back when bridging back
+    function transfer(address token, address to, uint256 amount) external {
+        IERC20(token).transfer(to, amount);
     }
 }

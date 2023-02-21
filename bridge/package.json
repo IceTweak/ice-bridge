@@ -4,8 +4,6 @@
   "version": "1.0.0",
   "description": "Basic EVM-compatible bridge app",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.0",
-    "@truffle/hdwallet-provider": "^2.1.2",
     "dotenv": "^16.0.3"
   },
   "scripts": {
@@ -19,17 +17,18 @@
   "private": true,
   "repository": "github:icetweak/solo-bridge",
   "devDependencies": {
+    "@openzeppelin/contracts": "^4.8.1",
     "@truffle/hdwallet-provider": "^2.1.4",
+    "@typechain/ethers-v5": "^10.2.0",
     "@typechain/truffle-v5": "^8.0.2",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.17",
-    "@typechain/ethers-v5": "^10.2.0",
-    "mocha": "^10.2.0",
-    "ethereum-waffle": "^3.4.4",
     "chai": "^4.3.7",
+    "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.2",
-    "ganache-cli": "^6.12.2",
+    "ganache": "^7.7.5",
+    "mocha": "^10.2.0",
     "truffle": "^5.7.1",
     "truffle-plugin-verify": "^0.6.1",
     "ts-node": "^10.9.1",

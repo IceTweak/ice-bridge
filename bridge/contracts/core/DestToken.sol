@@ -28,7 +28,7 @@ contract DestToken is ERC20, ERC20Burnable {
         _;
     }
 
-    /// @dev called from the bridge when tokens are locked on ETH side
+    /// @dev called from the bridge when tokens are locked on origin side
     function mint(address _recipient, uint256 _amount)
         public
         virtual

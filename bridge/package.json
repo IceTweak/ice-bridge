@@ -1,0 +1,39 @@
+{
+  "name": "@icetweak/solo-bridge",
+  "bugs": "https://github.com/IceTweak/solo-bridge.git",
+  "version": "1.0.0",
+  "description": "Basic EVM-compatible bridge app",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.0",
+    "@truffle/hdwallet-provider": "^2.1.2",
+    "dotenv": "^16.0.3"
+  },
+  "scripts": {
+    "build": "waffle",
+    "test": "export NODE_ENV=test && mocha -r ts-node/register 'test/**/*.test.ts'",
+    "generate-types": "npx typechain --target=truffle-v5 'build/contracts/*.json'",
+    "postinstall": "npx truffle compile && npm run generate-types",
+    "compile": "truffle compile"
+  },
+  "license": "ISC",
+  "private": true,
+  "repository": "github:icetweak/solo-bridge",
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^2.1.4",
+    "@typechain/truffle-v5": "^8.0.2",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.11.17",
+    "@typechain/ethers-v5": "^10.2.0",
+    "mocha": "^10.2.0",
+    "ethereum-waffle": "^3.4.4",
+    "chai": "^4.3.7",
+    "ethers": "^5.7.2",
+    "ganache-cli": "^6.12.2",
+    "truffle": "^5.7.1",
+    "truffle-plugin-verify": "^0.6.1",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.1.1",
+    "typescript": "^4.9.4"
+  }
+}
